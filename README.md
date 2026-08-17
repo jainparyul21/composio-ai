@@ -1,135 +1,337 @@
 # Composio AI Product Ops — Take-home
 
-**Goal:** research 100 apps across 10 categories and determine which ones Composio
-could turn into an agent toolkit today — what auth they use, whether access is
-self-serve or gated, how broad the API surface is, whether an MCP server already
-exists, and the buildability verdict + blocker if not ready.
+AI-assisted research and verification workflow for evaluating **100 apps across 10 categories** and determining which ones Composio could potentially turn into agent toolkits today.
 
-**Full case study (findings, patterns, agent workflow, verification):**
-open `output/case_study.html` in a browser, or see the deployed link in the
-submission. Understandable in ~2 minutes, no narration needed.
+The research evaluates authentication, access requirements, API surface, MCP availability, buildability, blockers, evidence, and confidence, then turns the 100 rows into product-level patterns and a practical build queue.
+
+## Live case study
+
+The final case study is a self-contained static HTML page.
+
+**Live:** `PASTE_YOUR_VERCEL_URL_HERE`
+
+**Source:** this repository
+
+The page is designed to be understood in roughly two minutes without narration and contains the findings, patterns, agent workflow, verification results, human handoff queue, and the full 100-app matrix.
+
+---
 
 ## What's in this repo
 
-```
-data/
-  apps_data.py      # the 100-row dataset: every field, every evidence URL, confidence tags
-  analyze.py         # clusters the dataset into the pattern stats shown in the case study
-  verification.py    # the 11-app verification sample: first-pass vs source-checked finding
+```text
 agent/
-  pipeline.py         # the runnable research + verification agent (see "Running the agent")
-  apps.csv             # the 100 apps in agent-input format
-generate_html.py     # builds output/case_study.html from the three data files above
+  pipeline.py          # runnable two-pass research + verification agent
+  apps.csv             # 100 apps in agent-input format
+
+data/
+  apps_data.py         # final 100-row research dataset
+  analyze.py           # computes aggregate patterns and analysis outputs
+  apps.json            # machine-readable dataset generated from the research
+  analysis.json        # computed analysis used by the case study
+  verification.py      # 11-app draft-vs-source verification sample
+
 output/
-  case_study.html    # the single-page deliverable
+  case_study.html      # generated self-contained case-study page
+
+index.html              # deployment entry point for the live static site
+generate_html.py        # regenerates output/case_study.html
+check_consistency.py    # validates dataset, analysis, HTML and repository consistency
+
+README.md
+.gitignore
 ```
 
-## Research dimensions
+---
 
-For each of the 100 apps: **category** + one-line description, **auth
-method(s)**, **self-serve vs gated** access, **API surface** (REST/GraphQL,
-breadth), **existing MCP** (official/community/none), a **buildability
-verdict** (Ready / Ready-friction / Blocked) with the main **blocker**, an
-**evidence URL**, and a **confidence tag** (verified / high / medium / low).
+## What was researched
 
-## Agent workflow
+For each of the 100 apps, the research captures:
 
-The research follows a two-pass structure, implemented as a reproducible
-pipeline in `agent/pipeline.py`:
+* **Category** and one-line description
+* **Authentication** — OAuth2, API key, Basic, token, or other
+* **Self-serve vs gated** access
+* **API surface** — REST / GraphQL and approximate breadth
+* **Existing MCP** — official, community, or none found
+* **Buildability** — `Ready`, `Ready-friction`, or `Blocked`
+* **Blocker** where the integration is not straightforward
+* **Evidence URL** behind the finding
+* **Confidence** — `verified`, `high`, `medium`, or `low`
 
-**Pass 1 — Research.** For each app, an LLM with a web-search tool fills the
-8-field schema above and self-rates its own confidence. It's explicitly
-instructed to prefer official documentation and never invent a URL or auth
-method it isn't sure of.
+The goal was not only to produce 100 rows, but to determine **where Composio could build first, where integration friction exists, and where vendor outreach is required.**
 
-**Pass 2 — Verification.** A sample of the pass-1 rows — every `low`-confidence
-row first, topped up with a seeded random batch — goes through a second,
-deliberately skeptical pass that is *forced* to fetch the real docs URL and
-re-derive each field from the live page, then diffs it against the draft.
+---
 
-**Human review.** Ambiguous cases are intentionally kept as low-confidence
-rather than forced into an unsupported conclusion. A `low` tag is a handoff
-signal, not a failure — see "Human handoff queue" below.
+## Key findings
 
-### Important note on how the submitted dataset was produced
+The current dataset produces:
 
-The final 100-app dataset in `data/apps_data.py` was assembled during an
-AI-assisted research session using the same structured schema, evidence
-requirements, and two-pass verification methodology that `agent/pipeline.py`
-implements. The Python agent in this repo is the reproducible implementation
-of that workflow — you can re-run it end to end against live docs with your
-own API credentials (see below). The current dataset should not be
-represented as the output of a single, unattended, end-to-end execution of
-`pipeline.py` in this environment; it reflects the same methodology, applied
-directly, with source verification on an 11-app sample. `output/case_study.html`
-states this plainly in its methodology section.
+| Finding                                               |       Result |
+| ----------------------------------------------------- | -----------: |
+| Ready                                                 | **66 / 100** |
+| Ready with friction                                   | **23 / 100** |
+| Blocked                                               | **11 / 100** |
+| OAuth2 present as an auth path                        | **61 / 100** |
+| Apps with an MCP server                               | **32 / 100** |
+| Low-confidence rows requiring follow-up               |  **7 / 100** |
+| Rows checked in the source-backed verification sample |       **11** |
+
+The case study turns these numbers into the main product conclusions and build-priority tiers.
+
+---
+
+## Research workflow
+
+The research was structured as a **two-pass pipeline** rather than a single model response.
+
+### Pass 1 — Research
+
+For each app, the research agent is given the app name and website hint and asked to fill the structured research schema.
+
+The research prompt explicitly requires the agent to:
+
+* prefer official documentation
+* provide evidence for each finding
+* avoid inventing URLs or authentication methods
+* record uncertainty instead of guessing
+* assign a confidence level to the result
+
+### Sampling
+
+The verification budget is allocated deliberately.
+
+All rows marked `low` confidence are included first. The remaining slots are filled with a seeded spot-check sample so the verification set can be reproduced.
+
+### Pass 2 — Verification
+
+A second, skeptical pass is asked to check the cited documentation and re-derive the relevant fields from the source rather than simply trusting the first answer.
+
+The result is compared with the original draft and the differences are recorded.
+
+This catches issues such as:
+
+* an API existing but being gated
+* an MCP existing but only on a paid tier
+* legacy and current authentication systems coexisting
+* self-serve signup being different from self-serve API access
+* assumptions about a product's availability being wrong
+
+---
+
+## Verification results
+
+The submitted case study contains an **11-app source-backed verification sample**.
+
+**4 / 11** findings were confirmed on the first pass.
+
+**7 / 11** required a correction or additional nuance after checking the documentation.
+
+These numbers represent **first-pass agreement and correction within the reviewed sample**. They are not presented as a statistical accuracy estimate for all 100 apps.
+
+The important result is that the verification pass exposed several material differences that a single-pass research workflow could have shipped without catching.
+
+Examples include:
+
+* **Twenty** — MCP availability depended on the hosted paid tier
+* **GoHighLevel** — current OAuth2 and legacy API-key systems needed to be distinguished
+* **Otter.ai** — an MCP exists while general API access remains gated
+* **Consensus** — the raw API and MCP paths have different access models
+* **Devin** — account signup is self-serve, while usage is gated by paid credits
+* **Grain** — API access requires a paid plan even though tokens can be generated from account settings
+
+---
+
+## Human handoff queue
+
+Seven rows remain explicitly marked as `low` confidence:
+
+* Pumble
+* fanbasis
+* MrScraper
+* Waterfall.io
+* Paygent Connect
+* iPayX
+* higgsfield
+
+These cases were not forced into confident-looking answers where public documentation was insufficient or ambiguous.
+
+The appropriate next step for these rows is human product-ops follow-up such as:
+
+* contacting the vendor
+* requesting developer/API access
+* creating a trial account
+* requesting documentation that is not publicly indexed
+
+No such vendor outreach is claimed as part of this submission.
+
+A low-confidence label is therefore treated as a **handoff signal**, not as a failure to produce an answer.
+
+---
+
+## Build-priority framework
+
+The case study groups the research into three practical tiers derived directly from the buildability verdict.
+
+### Tier 1 — Easy wins
+
+**66 apps**
+
+Documented APIs, achievable credentials, predictable authentication, and no major external approval dependency.
+
+### Tier 2 — Buildable with known friction
+
+**23 apps**
+
+The integration is possible, but a paid tier, app review, approval process, approved account, or additional setup step sits between signup and usable API access.
+
+### Tier 3 — Outreach required
+
+**11 apps**
+
+Partner-gated, enterprise-only, no public self-serve path, or insufficiently confirmed API access.
+
+This makes the research actionable: Tier 1 is primarily an engineering queue, Tier 2 adds operational dependencies, and Tier 3 requires a business/vendor conversation before engineering should commit.
+
+---
 
 ## Running the agent
 
-### 1. Demo / replay mode — no credentials needed
+The repository provides three execution modes.
+
+### 1. Demo / replay mode — no credentials
 
 ```bash
 python agent/pipeline.py --demo
 ```
 
-Loads a small fixed sample of apps, prints the exact research schema, and
-replays the existing 11-app verification sample so the draft → verify
-workflow is visible without an API key. This never makes a live model call
-and never labels replayed results as freshly researched — it prints
-`DEMO / REPLAY MODE` up front.
+This mode requires no API key.
 
-### 2. Small live test — real API calls, a few apps
+It loads the existing verification sample and replays the research → verification structure so the workflow can be inspected without making live model calls.
+
+The output is explicitly labelled:
+
+```text
+DEMO / REPLAY MODE
+```
+
+It does **not** claim that the replay is a fresh live research run.
+
+### 2. Small live test
+
+For a real LLM execution, install the Anthropic SDK:
 
 ```bash
 pip install anthropic
-export ANTHROPIC_API_KEY="sk-ant-..."   # PowerShell: $env:ANTHROPIC_API_KEY="sk-ant-..."
-python agent/pipeline.py --apps agent/apps.csv --limit 3 --verify-sample 1
 ```
 
-Runs the real research + verification pipeline against 3 apps, so you can see
-it work end to end without triggering 100 API calls.
+Set the API key as an environment variable.
 
-### 3. Full run — all 100 apps
+macOS / Linux:
 
 ```bash
-python agent/pipeline.py --apps agent/apps.csv --out results.json --verify-sample 20 --seed 42
+export ANTHROPIC_API_KEY="your-api-key"
 ```
 
-Researches all 100 apps, verifies a 20-app sample (every low-confidence row
-first, seeded random top-up for reproducibility), and writes `results.json`.
+Windows PowerShell:
 
-Swap `tools=[{"type": "web_search_20250305", ...}]` in `pipeline.py` for a
-Composio-hosted MCP/browser-use tool (`composio.tools.get(...)`) to run the
-same two-pass structure on Composio's own infrastructure instead of
-Anthropic's built-in web search.
+```powershell
+$env:ANTHROPIC_API_KEY="your-api-key"
+```
 
-## Human handoff queue
-
-7 of the 100 rows could not be resolved with confidence by the research
-pass — mostly low-visibility vendors with no real developer-docs footprint
-in search results (`fanbasis`, `Waterfall.io`, `Paygent Connect`, `iPayX`,
-`MrScraper`, `higgsfield`) or an ambiguous product (`Pumble` — only
-bot/webhook docs surfaced, no confirmed general REST API). These are tagged
-`confidence: "low"` in the dataset and called out on the case-study page
-rather than smoothed into a confident-looking row. The likely next action for
-each is one of: contact the vendor directly, request developer access, spin
-up a trial account, or request docs that aren't publicly indexed. None of
-that outreach has been performed as part of this submission — it's the
-queue a human product-ops reviewer would work next.
-
-## Reproducing the case study page
-
-`output/case_study.html` is a static, self-contained page (no build step)
-generated by `generate_html.py` from `data/apps_data.py` + `data/analyze.py`
-+ `data/verification.py`. After editing the dataset, regenerate with:
+Then run a small test:
 
 ```bash
-python data/analyze.py      # recomputes data/analysis.json and data/apps.json
-python generate_html.py     # rebuilds output/case_study.html
+python agent/pipeline.py \
+  --apps agent/apps.csv \
+  --limit 3 \
+  --verify-sample 1
 ```
 
-## Security / secrets
+This performs a genuine live research + verification run on a small number of apps before attempting a full run.
 
-No API keys, tokens, or credentials are committed to this repo. `.gitignore`
-excludes `.env`, `*.key`, `secrets/`, and generated `results.json` files —
-set `ANTHROPIC_API_KEY` as an environment variable, never in a committed file.
+### 3. Full run
+
+```bash
+python agent/pipeline.py \
+  --apps agent/apps.csv \
+  --out results.json \
+  --verify-sample 20 \
+  --seed 42
+```
+
+The full run researches all 100 apps, prioritizes low-confidence rows for verification, fills the remainder with a seeded spot-check sample, and writes the resulting structured output to `results.json`.
+
+The implementation also includes retry/error handling, deterministic sampling, limited test runs, and structured parsing/failure handling.
+
+---
+
+## Important note about the submitted dataset
+
+The final 100-app dataset was assembled during an **AI-assisted research session** using the same structured schema, evidence requirements, and two-pass verification methodology implemented by `agent/pipeline.py`.
+
+The Python pipeline in this repository is the **reproducible implementation of that workflow**.
+
+The submitted dataset should not be represented as the output of one unattended end-to-end execution of `pipeline.py`. Instead, the dataset reflects the research methodology applied during the research session, with source-backed verification performed on the 11-app sample shown in the case study.
+
+This distinction is intentionally documented rather than implying an execution that did not occur.
+
+---
+
+## Reproducing the case study
+
+The case study is a static, self-contained HTML page and does not require a web server or build framework.
+
+To regenerate the analysis outputs and case study after changing the dataset:
+
+```bash
+python data/analyze.py
+python generate_html.py
+```
+
+This updates:
+
+```text
+data/apps.json
+data/analysis.json
+output/case_study.html
+```
+
+`index.html` is the deployment entry point for the live static site.
+
+---
+
+## Consistency check
+
+Before submission, run:
+
+```bash
+python check_consistency.py
+```
+
+The checker validates the final repository for issues including:
+
+* 100 app IDs
+* verdict totals
+* confidence totals
+* dataset / analysis agreement
+* HTML / analysis agreement
+* expected verification counts
+* forbidden claims or outdated language
+* accidental committed secrets
+
+A clean pass means the numbers presented in the case study are consistent with the underlying dataset.
+
+---
+
+## Security
+
+No API keys, tokens, cookies, or other credentials belong in this repository.
+
+Use environment variables for live API execution:
+
+```text
+ANTHROPIC_API_KEY
+```
+
+Never commit a key to source control.
+
+The repository's `.gitignore` excludes common secret files and generated outputs such as `results.json`.
