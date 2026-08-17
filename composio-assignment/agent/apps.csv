@@ -1,0 +1,101 @@
+#,App,Website / hint
+1,Salesforce,https://developer.salesforce.com/docs
+2,HubSpot,https://developers.hubspot.com/docs/api/overview
+3,Pipedrive,https://developers.pipedrive.com/docs/api/v1
+4,Attio,https://developers.attio.com/docs
+5,Twenty,https://docs.twenty.com/developers/extend/api
+6,Podio,https://developers.podio.com/
+7,Zoho CRM,https://www.zoho.com/crm/developer/docs/api/v6/
+8,Close,https://developer.close.com/
+9,Copper,https://developer.copper.com/
+10,DealCloud,https://api.docs.dealcloud.com/docs/apikeys
+11,Zendesk,https://developer.zendesk.com/api-reference/
+12,Intercom,https://developers.intercom.com/docs/references/rest-api/
+13,Freshdesk,https://developers.freshdesk.com/api/
+14,Front,https://dev.frontapp.com/
+15,Pylon,https://docs.usepylon.com/pylon-docs/developer/api/authentication
+16,LiveAgent,https://www.liveagent.com/developers/
+17,Plain,https://www.plain.com/docs
+18,Help Scout,https://developer.helpscout.com/
+19,Gorgias,https://developers.gorgias.com/
+20,Gladly,https://developer.gladly.com/
+21,Slack,https://api.slack.com/
+22,Twilio,https://www.twilio.com/docs/usage/api
+23,Zoho Cliq,https://www.zoho.com/cliq/help/platform/
+24,Lark (Larksuite),https://open.larksuite.com/document
+25,Pumble,https://pumble.com/help
+26,Discord,https://discord.com/developers/docs/intro
+27,Telegram,https://core.telegram.org/bots/api
+28,WhatsApp Business,https://developers.facebook.com/docs/whatsapp
+29,Aircall,https://developer.aircall.io/
+30,Vonage,https://developer.vonage.com/
+31,Google Ads,https://developers.google.com/google-ads/api/docs/start
+32,Meta Ads,https://developers.facebook.com/docs/marketing-apis
+33,LinkedIn Ads,https://learn.microsoft.com/en-us/linkedin/marketing/
+34,GoHighLevel,https://highlevel.stoplight.io/docs/integrations/0443d7d1a4bd0-overview
+35,Mailchimp,https://mailchimp.com/developer/
+36,Klaviyo,https://developers.klaviyo.com/en
+37,systeme.io,https://developer.systeme.io/
+38,Pinterest,https://developers.pinterest.com/docs/getting-started/introduction/
+39,Threads (Meta),https://developers.facebook.com/docs/threads
+40,SendGrid,https://www.twilio.com/docs/sendgrid/api-reference
+41,Shopify,https://shopify.dev/docs/api
+42,WooCommerce,https://woocommerce.com/document/woocommerce-rest-api/
+43,BigCommerce,https://developer.bigcommerce.com/docs/rest-management
+44,Salesforce Commerce Cloud,https://developer.salesforce.com/docs/commerce
+45,Magento (Adobe Commerce),https://developer.adobe.com/commerce/webapi/
+46,Squarespace,https://developers.squarespace.com/commerce-apis
+47,Ecwid,https://api-docs.ecwid.com/
+48,Gumroad,https://app.gumroad.com/api
+49,Amazon Selling Partner API,https://developer-docs.amazon.com/sp-api/
+50,fanbasis,https://fanbasis.com
+51,DataForSEO,https://docs.dataforseo.com/v3/
+52,SE Ranking,https://seranking.com/api.html
+53,Ahrefs,https://ahrefs.com/api
+54,MrScraper,https://docs.mrscraper.com
+55,Apify,https://docs.apify.com/api/v2
+56,Firecrawl,https://docs.firecrawl.dev/
+57,Bright Data,https://docs.brightdata.com/
+58,Sherlock,https://github.com/sherlock-project/sherlock
+59,Waterfall.io,https://waterfall.io
+60,Clay,https://www.clay.com/university
+61,GitHub,https://docs.github.com/en/rest
+62,Vercel,https://vercel.com/docs/rest-api
+63,Netlify,https://docs.netlify.com/api/get-started/
+64,Cloudflare,https://developers.cloudflare.com/api/
+65,Supabase,https://supabase.com/docs/guides/api
+66,Neo4j,https://neo4j.com/docs/aura/platform/api/
+67,Snowflake,https://docs.snowflake.com/en/developer-guide/sql-api/index
+68,MongoDB Atlas,https://www.mongodb.com/docs/atlas/api/atlas-admin-api-ref/
+69,Datadog,https://docs.datadoghq.com/api/latest/
+70,Sentry,https://docs.sentry.io/api/
+71,Notion,https://developers.notion.com/
+72,Airtable,https://support.airtable.com/docs/using-the-airtable-mcp-server
+73,Linear,https://developers.linear.app/docs
+74,Jira,https://developer.atlassian.com/cloud/jira/platform/rest/v3/
+75,Asana,https://developers.asana.com/docs
+76,Monday.com,https://developer.monday.com/api-reference/docs
+77,ClickUp,https://developer.clickup.com/docs
+78,Coda,https://coda.io/developers/apis/v1
+79,Smartsheet,https://developers.smartsheet.com/
+80,Harvest,https://help.getharvest.com/api-v2/
+81,Stripe,https://stripe.com/docs/api
+82,Plaid,https://plaid.com/docs/
+83,Binance,https://binance-docs.github.io/apidocs/spot/en/
+84,Paygent Connect,"N/A - low-visibility vendor, flagged for human follow-up"
+85,iPayX,https://ipayx.ai/docs
+86,QuickBooks,https://developer.intuit.com/app/developer/qbo/docs/get-started
+87,Xero,https://developer.xero.com/documentation/
+88,Brex,https://developer.brex.com/
+89,Ramp,https://docs.ramp.com/
+90,PitchBook,https://pitchbook.com/
+91,NotebookLM (Enterprise),https://cloud.google.com/gemini
+92,Otter AI,https://help.otter.ai/hc/en-us/articles/35287607569687-Otter-MCP-Server
+93,Fathom,https://developers.fathom.ai/
+94,Consensus,https://docs.consensus.app/docs/mcp
+95,Reducto,https://reducto.ai/
+96,Devin,https://docs.devin.ai/work-with-devin/devin-mcp
+97,higgsfield,https://higgsfield.ai/cli
+98,Mermaid CLI,https://github.com/mermaid-js/mermaid-cli
+99,YouTube Transcript API (transcriptapi.com),https://transcriptapi.com/
+100,Grain,https://developers.grain.com/
