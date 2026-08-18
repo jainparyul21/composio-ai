@@ -8,7 +8,7 @@ The research evaluates authentication, access requirements, API surface, MCP ava
 
 The final case study is a self-contained static HTML page.
 
-**Live:** `PASTE_YOUR_VERCEL_URL_HERE`
+**Live:** `https://composio-ai.vercel.app/`
 
 **Source:** this repository
 
