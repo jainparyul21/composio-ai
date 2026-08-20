@@ -1,4 +1,4 @@
-# Composio AI Product Ops — Take-home
+# Composio AI Product Ops 
 
 AI-assisted research and verification workflow for evaluating **100 apps across 10 categories** and determining which ones Composio could potentially turn into agent toolkits today.
 
